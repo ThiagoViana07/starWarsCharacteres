@@ -50,7 +50,7 @@ export default StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -62,9 +62,23 @@ export default StyleSheet.create({
     elevation: 5,
   },
 
+  viewStyle: {
+    marginTop: 10,
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
+    flex: 1,
+    alignItems: 'center',
+    borderRadius: 10,
+    padding: 12,
+    margin: 5,
+    elevation: 1,
   },
 });

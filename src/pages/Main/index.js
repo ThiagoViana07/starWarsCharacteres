@@ -10,6 +10,8 @@ import {
   Alert,
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import api from '../../services/api';
 
 import styles from './styles';
@@ -17,22 +19,14 @@ import styles from './styles';
 export default function Main() {
   const [persons, setPersons] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [buttonModal, setButtonModal] = useState('');
   const [id, setId] = useState(1);
+  const [loadFunc, setLoadFunc] = useState(false);
 
   const load = async () => {
     const response = await api.get(`/people/${id}`);
-    //console.log(response);
-
-    const data = {
-      name: response.data.name,
-      height: response.data.height,
-      mass: response.data.mass,
-    };
-
-    console.log('data', response.data);
 
     setPersons([...persons, response.data]);
-    console.log(id);
 
     if (id === 16) {
       setId(id + 2);
@@ -41,12 +35,49 @@ export default function Main() {
     }
   };
 
+  async function storage() {
+    const buttonModal1 = await AsyncStorage.getItem('modal');
+    if (buttonModal1) {
+      setButtonModal(JSON.parse(buttonModal1));
+    }
+    if (
+      buttonModal1 === '"tarde"' ||
+      buttonModal1 === '""' ||
+      buttonModal1 === null
+    ) {
+      setTimeout(() => {
+        setModalVisible(true);
+      }, 7000);
+    }
+  }
+
+  async function funcao() {
+    if (buttonModal === 'tarde') {
+      setTimeout(() => {
+        setModalVisible(true);
+      }, 7000);
+    }
+  }
+
+  async function selectedModal(option) {
+    await setModalVisible(!modalVisible);
+    await setButtonModal(option);
+    await setLoadFunc(!loadFunc);
+  }
+
   useEffect(() => {
-    setTimeout(() => {
-      setModalVisible(true);
-    }, 5000);
     load();
+    storage();
   }, []);
+
+  useEffect(() => {
+    funcao();
+  }, [loadFunc]);
+
+  useEffect(() => {
+    //console.log(buttonModal);
+    AsyncStorage.setItem('modal', JSON.stringify(buttonModal));
+  }, [buttonModal]);
 
   return (
     <View style={styles.container}>
@@ -64,17 +95,32 @@ export default function Main() {
               Você excedeu o tempo de uso do nosso aplicativo!{'\n\n'} Efetue o
               pagamento para continuar utilizando nossos serviçoes.
             </Text>
-            {/* <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable> */}
+            <View style={styles.viewStyle}>
+              <Pressable
+                style={[
+                  styles.button,
+                  styles.buttonClose,
+                  {backgroundColor: '#32CD32'},
+                ]}
+                onPress={() => selectedModal('pagar')}>
+                <Text style={styles.textStyle}>Pagar</Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.button,
+                  styles.buttonClose,
+                  {backgroundColor: '#B22222'},
+                ]}
+                onPress={() => selectedModal('tarde')}>
+                <Text style={styles.textStyle}>Mais tarde</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
       <FlatList
         data={persons}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={1.5}
         onEndReached={load}
         keyExtractor={person => String(person.name)}
         renderItem={({item}) => (
