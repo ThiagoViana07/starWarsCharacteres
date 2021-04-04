@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import {
   View,
   Text,
@@ -8,6 +10,8 @@ import {
   Modal,
   Pressable,
   Alert,
+  Touchable,
+  TouchableOpacity,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,14 +20,21 @@ import api from '../../services/api';
 
 import styles from './styles';
 
-export default function Main() {
+export default function Main(props) {
   const [persons, setPersons] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonModal, setButtonModal] = useState('');
   const [id, setId] = useState(1);
   const [loadFunc, setLoadFunc] = useState(false);
 
+  const handleNavigate = async person => {
+    const {navigation} = props;
+
+    navigation.navigate('Person', {person});
+  };
+
   const load = async () => {
+    Icon.loadFont();
     const response = await api.get(`/people/${id}`);
 
     setPersons([...persons, response.data]);
@@ -47,7 +58,7 @@ export default function Main() {
     ) {
       setTimeout(() => {
         setModalVisible(true);
-      }, 7000);
+      }, 45000);
     }
   }
 
@@ -55,7 +66,7 @@ export default function Main() {
     if (buttonModal === 'tarde') {
       setTimeout(() => {
         setModalVisible(true);
-      }, 7000);
+      }, 45000);
     }
   }
 
@@ -97,20 +108,12 @@ export default function Main() {
             </Text>
             <View style={styles.viewStyle}>
               <Pressable
-                style={[
-                  styles.button,
-                  styles.buttonClose,
-                  {backgroundColor: '#32CD32'},
-                ]}
+                style={[styles.button, {backgroundColor: '#32CD32'}]}
                 onPress={() => selectedModal('pagar')}>
                 <Text style={styles.textStyle}>Pagar</Text>
               </Pressable>
               <Pressable
-                style={[
-                  styles.button,
-                  styles.buttonClose,
-                  {backgroundColor: '#B22222'},
-                ]}
+                style={[styles.button, {backgroundColor: '#B22222'}]}
                 onPress={() => selectedModal('tarde')}>
                 <Text style={styles.textStyle}>Mais tarde</Text>
               </Pressable>
@@ -143,9 +146,17 @@ export default function Main() {
             </Text>
 
             <Text style={styles.Type}>
-              <Text style={styles.TypeText}>Peso: </Text>
+              <Text style={styles.TypeText}>Mass: </Text>
               {item.mass}
             </Text>
+
+            <TouchableOpacity
+              style={[styles.buttonPlanet, {backgroundColor: '#dac305'}]}
+              onPress={() => {
+                handleNavigate(item);
+              }}>
+              <Text style={styles.textStyle}>Ver detalhes do planeta</Text>
+            </TouchableOpacity>
           </View>
         )}
       />

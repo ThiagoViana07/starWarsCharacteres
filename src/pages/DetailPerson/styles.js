@@ -3,18 +3,18 @@ import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 25,
   },
 
   Avatar: {
     width: 84,
     height: 84,
-    borderRadius: 32,
+    borderRadius: 22,
     backgroundColor: '#fff',
   },
 
   User: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 0,
     marginRight: 20,
     marginBottom: 30,
@@ -29,11 +29,20 @@ export default StyleSheet.create({
   },
 
   Type: {
-    fontSize: 13,
+    width: 200,
+    fontSize: 16,
     color: '#999',
-    lineHeight: 18,
-    marginTop: 5,
-    textAlign: 'center',
+    padding: 7,
+    marginTop: 8,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 1,
   },
 
   TypeText: {
@@ -78,15 +87,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     padding: 12,
-    margin: 5,
-    elevation: 1,
-  },
-
-  buttonPlanet: {
-    flex: 1,
-    alignItems: 'center',
-    borderRadius: 10,
-    padding: 10,
     margin: 5,
     elevation: 1,
   },
